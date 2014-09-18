@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.nitin.rockpapersissor"
-        minSdkVersion 11
-        targetSdkVersion 20
+        minSdkVersion 14
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
     }

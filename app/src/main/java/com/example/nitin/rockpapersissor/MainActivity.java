@@ -60,8 +60,8 @@ public class MainActivity extends ActionBarActivity {
 
 
             Button playButton=(Button)rootView.findViewById(R.id.button_play);
-            Button notifyViaServiceBUtton=(Button) rootView.findViewById(R.id.button_notify_service);
-            Button notifyButton=(Button)rootView.findViewById(R.id.button_notify);
+            //Button notifyViaServiceBUtton=(Button) rootView.findViewById(R.id.button_notify_service);
+            //Button notifyButton=(Button)rootView.findViewById(R.id.button_notify);
 
 
             playButton.setOnClickListener(new View.OnClickListener() {
