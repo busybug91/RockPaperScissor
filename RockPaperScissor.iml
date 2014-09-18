@@ -12,7 +12,11 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
     </content>
+<<<<<<< HEAD
     <orderEntry type="inheritedJdk" />
+=======
+    <orderEntry type="jdk" jdkName="JDK" jdkType="JavaSDK" />
+>>>>>>> Nitin_Local
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
