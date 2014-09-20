@@ -1,4 +1,4 @@
-package com.example.nitin.rockpapersissor;
+package com.example.nitin.rockpaperscissor;
 
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;

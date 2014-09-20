@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
   android:orientation="vertical"
-    tools:context="com.example.nitin.rockpapersissor.DrawGestureActivity$PlaceholderFragment">
+    tools:context="com.example.nitin.rockpaperscissor.DrawGestureActivity$PlaceholderFragment">
 
     <TextView
         android:text="@string/draw_gesture_area"

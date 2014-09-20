@@ -1,4 +1,4 @@
-package com.example.nitin.rockpapersissor;
+package com.example.nitin.rockpaperscissor;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,10 +60,6 @@ public class MainActivity extends ActionBarActivity {
 
 
             Button playButton=(Button)rootView.findViewById(R.id.button_play);
-            Button notifyViaServiceBUtton=(Button) rootView.findViewById(R.id.button_notify_service);
-            Button notifyButton=(Button)rootView.findViewById(R.id.button_notify);
-
-
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
