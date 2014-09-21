@@ -11,6 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 import android.app.Activity;
+import android.view.View;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -18,8 +24,6 @@ import java.util.ArrayList;
  * Created by nitin on 9/12/14.
  */
 public class MyGesturePerformedListener implements GestureOverlayView.OnGesturePerformedListener {
-    public static int Round=1;
-    public static int wins=0;
 
     GestureLibrary gestureLibrary=null;
     Context context=null;
@@ -67,14 +71,8 @@ public class MyGesturePerformedListener implements GestureOverlayView.OnGestureP
             else
                 userInput="Unknown";
             //Toast.makeText(context, "Your choice is "+userInput,Toast.LENGTH_SHORT).show();
-            result=cpuGamer(userInput,"Normal");
-            if(Round==3 || wins==2 || wins==-2){
-                    NextGame();
-            }else{
-                result="You "+result+" in round" + (++Round) +"/3 ." ;
-                Toast.makeText(context, result,Toast.LENGTH_SHORT).show();
-                }
-
+            MyCPU cpu=new MyCPU(context);
+            cpu.cpuGame(userInput,"Normal");
 
             //Update data in DB
             //clear the area for new gesture
@@ -82,86 +80,5 @@ public class MyGesturePerformedListener implements GestureOverlayView.OnGestureP
         }
     }
 
-    public String cpuGamer(String userInput,String gameMode){
-        String[] gestures= {"Scissor","Paper","Rock"}; // 0=>Scissor 1=>paper 2=>Rock
-        String cpuInput1,cpuInput2;
-        String result="";
-        int temp=0;
-
-        if (userInput.equals("Unknown")) return "lose";
-        if(gameMode.equals("Normal")){
-            cpuInput1=gestures[(int)(Math.random()*2)];
-            temp=gameHelper(userInput,cpuInput1);
-        }else if(gameMode.equals("Demon")){
-            cpuInput1=gestures[(int)(Math.random()*2)];
-            cpuInput2=gestures[(int)(Math.random()*2)];
-            temp=(gameHelper(userInput,cpuInput1) & gameHelper(userInput,cpuInput2)); // Will change?
-        }
-
-        switch (temp){
-            case -1: result="draw";
-                break;
-            case 0:  result="lose";
-                     wins--;
-                break;
-            case 1:  result="win";
-                     wins++;
-                break;
-        }
-        return result;
-    }
-
-    public int gameHelper(String user,String cpu){
-        if(cpu.equals("Scissor")){
-            if(user.equals("Scissor")) return -1;
-            else if(user.equals("Paper")) return 0;
-            else return 1;
-        }
-        else if(cpu.equals("Paper")){
-            if(user.equals("Scissor")) return 1;
-            else if(user.equals("Paper")) return -1;
-            else return 0;
-        }
-        else{
-            if(user.equals("Scissor")) return 0;
-            else if(user.equals("Paper")) return 1;
-            else return -1;
-        }
-    }
-
-    public void NextGame(){
-        TextView tv;
-        String result="";
-        if (wins>0) result="win";
-        else result="lose";
-        Round=0;
-        wins=0;
-
-        //insert DB **YIFEI SHOULD WORK HERE
-
-        new AlertDialog.Builder(context)
-                .setTitle("You "+result)
-                .setPositiveButton("Start New Game",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                DrawGestureActivity.instance.onCreate(null); //refresh
-                            }
-                        })
-                .setNegativeButton("Quit to Main Menu",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                //  startActivity();
-                                  DrawGestureActivity.instance.finish();
-                                  Intent intent = new Intent(context, MainActivity.class);
-                                  context.startActivity(intent);
-                            }
-                        })
-                .create()
-                .show();
-    }
 
 }

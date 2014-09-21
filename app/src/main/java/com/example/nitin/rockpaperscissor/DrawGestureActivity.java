@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+
 public class DrawGestureActivity extends ActionBarActivity {
     public static DrawGestureActivity instance=null;
     private static GestureLibrary gestureLibrary;
