@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.content.Context;
 import android.widget.Toast;
+import android.view.LayoutInflater;
 
 /**
  * Created by Xiaoxuan Wang on 9/20/14.
@@ -24,6 +25,10 @@ public class MyCPU {
         result=cpuGamer(userInput,"Normal");
         result=result+" in round" + (++Round) +"/3 ." ;
         Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+
+        Intent intent=new Intent(context,AnimationActivity.class);
+        context.startActivity(intent);
+
         if(Round==3 || wins==2 || wins==-2) NextGame();
     }
 
@@ -54,6 +59,11 @@ public class MyCPU {
                 wins++;
                 break;
         }
+
+        AnimationActivity.user=userInput;
+        AnimationActivity.cpu=cpuInput1;
+        AnimationActivity.res=temp;
+
         return "Your gesture is " + userInput + " pc gesture is " + cpuInput1 + ", you " + result;
     }
 

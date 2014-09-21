@@ -11,5 +11,9 @@
     <string name="title_activity_notification_sender">NotificationSenderActivity</string>
     <string name="title_activity_notificaiton_receiver">NotificaitonReceiver</string>
     <string name="title_activity_notification_receiver">NotificationReceiver</string>
+    <string name="title_activity_animation">AnimationActivity</string>
+    <string name="paper">paper</string>
+    <string name="scissor">scissor</string>
+    <string name="rock">rock</string>
 
 </resources>
