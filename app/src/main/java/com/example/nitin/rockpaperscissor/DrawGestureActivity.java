@@ -1,5 +1,8 @@
 package com.example.nitin.rockpaperscissor;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
@@ -13,15 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class DrawGestureActivity extends ActionBarActivity {
-
-
+    public static DrawGestureActivity instance=null;
     private static GestureLibrary gestureLibrary;
     private static GestureOverlayView overlay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance=this;
         setContentView(R.layout.activity_draw_gesture);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -94,4 +99,7 @@ public class DrawGestureActivity extends ActionBarActivity {
             return rootView;
         }
     }
+
+
+
 }
