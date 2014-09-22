@@ -1,5 +1,6 @@
 package com.example.nitin.rockpapersissor;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,10 +11,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-
+/**
+ * Created by Yifei on 9/18/14.
+ */
 public class MainActivity extends ActionBarActivity {
 
+    LoginDataBaseAdapter loginDataBaseAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +29,11 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-    }
 
+        loginDataBaseAdapter=new LoginDataBaseAdapter(this);
+        loginDataBaseAdapter=loginDataBaseAdapter.open();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -45,9 +54,6 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
@@ -55,23 +61,70 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+            //Button loginBtn = (Button) rootView.findViewById(R.id.button);
 
-            Button playButton=(Button)rootView.findViewById(R.id.button_play);
-            //Button notifyViaServiceBUtton=(Button) rootView.findViewById(R.id.button_notify_service);
-            //Button notifyButton=(Button)rootView.findViewById(R.id.button_notify);
-
-
-            playButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent drawGestureIntent = new Intent(getActivity(), DrawGestureActivity.class);
-                    startActivity(drawGestureIntent);
+            Button registerBtn = (Button) rootView.findViewById(R.id.button2);
+            registerBtn.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View view){
+                    Intent intentRegister=new Intent(getActivity(),PlayActivity.class);
+                    startActivity(intentRegister);
                 }
             });
             return rootView;
         }
+    }
+    public void login(View view){
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.login);
+        dialog.setTitle("Login");
+
+        UserSessionManager session = new UserSessionManager(MainActivity.this);
+
+        // get the Refferences of views
+        final EditText editTextUserName=(EditText)dialog.findViewById(R.id.editTextUserNameToLogin);
+        final EditText editTextPassword=(EditText)dialog.findViewById(R.id.editTextPasswordToLogin);
+
+        // get The User name and Password
+        final String userName=editTextUserName.getText().toString();
+        final String password=editTextPassword.getText().toString();
+
+        Button loginBtn=(Button)dialog.findViewById(R.id.buttonSignIn);
+
+        session.createUserLoginSession(userName, password);
+
+        // Set On ClickListener
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+
+
+                // fetch the Password form database for respective user name
+                String storedPassword=loginDataBaseAdapter.getSinlgeEntry(userName);
+
+                // check if the Stored password matches with  Password entered by user
+                if(password.equals(storedPassword))
+                {
+                    Toast.makeText(MainActivity.this, "Congrats: Login Successfull", Toast.LENGTH_LONG).show();
+                    //dialog.dismiss();
+                    Intent i = new Intent(getApplicationContext(), PlayActivity.class);
+                    startActivity(i);
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "User Name or Password does not match", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        // Close The Database
+        loginDataBaseAdapter.close();
     }
 }
