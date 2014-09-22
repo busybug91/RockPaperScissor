@@ -37,12 +37,13 @@ public class UserSessionManager {
     // Constructor
     public UserSessionManager(Context context){
         this._context = context;
-        pref = this._context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
+        pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
 
     //Create login session
     public void createUserLoginSession(String name, String email){
+        editor.clear();
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
 
@@ -107,6 +108,7 @@ public class UserSessionManager {
      * */
     public void logoutUser(){
 
+        //editor.putBoolean(IS_USER_LOGIN, false);
         // Clearing all user data from Shared Preferences
         editor.clear();
         editor.commit();

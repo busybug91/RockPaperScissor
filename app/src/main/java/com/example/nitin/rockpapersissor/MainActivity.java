@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,8 +70,9 @@ public class MainActivity extends ActionBarActivity {
             Button registerBtn = (Button) rootView.findViewById(R.id.button2);
             registerBtn.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View view){
-                    Intent intentRegister=new Intent(getActivity(),PlayActivity.class);
+                    Intent intentRegister=new Intent(getActivity(),RegisterActivity.class);
                     startActivity(intentRegister);
+                    //getActivity().finish();
                 }
             });
             return rootView;
@@ -81,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
         dialog.setContentView(R.layout.login);
         dialog.setTitle("Login");
 
-        UserSessionManager session = new UserSessionManager(MainActivity.this);
+        final UserSessionManager session = new UserSessionManager(getApplicationContext());
 
         // get the Refferences of views
         final EditText editTextUserName=(EditText)dialog.findViewById(R.id.editTextUserNameToLogin);
@@ -93,7 +95,7 @@ public class MainActivity extends ActionBarActivity {
 
         Button loginBtn=(Button)dialog.findViewById(R.id.buttonSignIn);
 
-        session.createUserLoginSession(userName, password);
+
 
         // Set On ClickListener
         loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -102,18 +104,23 @@ public class MainActivity extends ActionBarActivity {
 
 
                 // fetch the Password form database for respective user name
-                String storedPassword=loginDataBaseAdapter.getSinlgeEntry(userName);
+                String storedPassword=loginDataBaseAdapter.getSingleEntry(userName);
 
+                Log.d("Check User", "Checking! ---- " + storedPassword);
                 // check if the Stored password matches with  Password entered by user
                 if(password.equals(storedPassword))
                 {
+                    Log.d("Check User", "User is correct!");
+                    session.createUserLoginSession(userName, password);
                     Toast.makeText(MainActivity.this, "Congrats: Login Successfull", Toast.LENGTH_LONG).show();
                     //dialog.dismiss();
                     Intent i = new Intent(getApplicationContext(), PlayActivity.class);
                     startActivity(i);
+                    finish();
                 }
                 else
                 {
+                    Log.d("Check User", "User is incorrect!");
                     Toast.makeText(MainActivity.this, "User Name or Password does not match", Toast.LENGTH_LONG).show();
                 }
             }

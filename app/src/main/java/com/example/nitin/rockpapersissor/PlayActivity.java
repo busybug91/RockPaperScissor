@@ -1,6 +1,5 @@
 package com.example.nitin.rockpapersissor;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,7 +21,7 @@ public class PlayActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment(getApplicationContext()))
+                    .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
     }
@@ -51,11 +50,10 @@ public class PlayActivity extends ActionBarActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-        UserSessionManager session;
-        public PlaceholderFragment(Context context) {
-            session = new UserSessionManager(context);
-        }
+        public PlaceholderFragment() {
 
+        }
+        //UserSessionManager session = new UserSessionManager(getActivity());
         //String KEY_LOGIN_NAME = "IS_USER_LOGIN";
         //SharedPreferences.Editor editor = session.editor;
 
@@ -63,7 +61,7 @@ public class PlayActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_play, container, false);
-
+            final UserSessionManager session = new UserSessionManager(container.getContext());
 
             Button btnPlay=(Button)rootView.findViewById(R.id.button_play);
             //Button notifyViaServiceBUtton=(Button) rootView.findViewById(R.id.button_notify_service);
@@ -78,7 +76,7 @@ public class PlayActivity extends ActionBarActivity {
                 }
             });
 
-            Button btnLogout = (Button) rootView.findViewById(R.id.button_logout);
+            /*Button btnLogout = (Button) rootView.findViewById(R.id.button_logout);
 
             btnLogout.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view){
@@ -87,7 +85,7 @@ public class PlayActivity extends ActionBarActivity {
                     getActivity().finish();
                 }
             });
-
+*/
             return rootView;
         }
     }

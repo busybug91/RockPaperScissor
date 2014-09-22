@@ -30,12 +30,14 @@ public class SplashActivity extends Activity {
             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
         }
         else {
             Log.d("Splash Activity ", "User is logged in so Home Screen will appear");
             Intent intent = new Intent(SplashActivity.this, PlayActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
         }
     }
 
