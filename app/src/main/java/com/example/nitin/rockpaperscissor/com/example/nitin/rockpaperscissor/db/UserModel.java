@@ -68,9 +68,9 @@ public class UserModel {
     public UserModel generateTestUser()
     {
         UserModel user= new UserModel();
-        user.setAge(5);
+        user.setAge(24);
         user.setSex("M");
-        user.setUserName("Nitin");
+        user.setUserName("NitinA");
         return user;
     }
 }

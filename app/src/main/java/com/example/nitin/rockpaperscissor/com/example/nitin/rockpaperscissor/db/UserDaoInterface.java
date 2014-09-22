@@ -7,8 +7,9 @@ import java.util.List;
  */
 public interface UserDaoInterface {
 
-public boolean saveUser(UserModel user);
+public long saveUser(UserModel user);
     public boolean checkUser(UserModel user);
     public UserModel findUser(String userName);
     public List<UserModel> getAllUsers();
+    public long saveScore(ScoresModel scoresModel);
 }
