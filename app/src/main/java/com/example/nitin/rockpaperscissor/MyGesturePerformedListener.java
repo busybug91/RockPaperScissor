@@ -5,7 +5,6 @@ import android.gesture.Gesture;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -13,7 +12,6 @@ import java.util.ArrayList;
  * Created by nitin on 9/12/14.
  */
 public class MyGesturePerformedListener implements GestureOverlayView.OnGesturePerformedListener {
-
 
     GestureLibrary gestureLibrary=null;
     Context context=null;
@@ -29,6 +27,7 @@ public class MyGesturePerformedListener implements GestureOverlayView.OnGestureP
         //Else create a threshold and learn from user's input.
         ArrayList<Prediction> predictions=gestureLibrary.recognize(gesture);
         String predictionName=null;
+        String result="";
 
         for(Prediction p:predictions)
         {
@@ -58,13 +57,16 @@ public class MyGesturePerformedListener implements GestureOverlayView.OnGestureP
 
             }
             else
-                userInput="Unknown gesture name";
+                userInput="Unknown";
+            //Toast.makeText(context, "Your choice is "+userInput,Toast.LENGTH_SHORT).show();
+            MyCPU cpu=new MyCPU(context);
+            cpu.cpuGame(userInput,"Normal");
 
-
-            Toast.makeText(context, "Your choice is "+userInput,Toast.LENGTH_SHORT).show();
-
+            //Update data in DB
             //clear the area for new gesture
 
         }
     }
+
+
 }

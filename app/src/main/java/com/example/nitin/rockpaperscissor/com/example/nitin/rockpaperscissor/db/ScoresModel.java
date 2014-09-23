@@ -14,6 +14,14 @@ public class ScoresModel {
         this.losses = losses;
     }
 
+    @Override
+    public String toString() {
+        return "ScoresModel{" +
+                "wins=" + wins +
+                ", losses=" + losses +
+                '}';
+    }
+
     public void setWins(int wins) {
 
         this.wins = wins;
