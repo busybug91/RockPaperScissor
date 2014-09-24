@@ -10,6 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserDAO;
+import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserModel;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -55,19 +62,54 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+            final EditText editTextUserName=(EditText)rootView.findViewById(R.id.editText2);
+            final EditText editTextAge = (EditText)rootView.findViewById(R.id.editText);
+
+            final RadioGroup radioSexGroup = (RadioGroup) rootView.findViewById(R.id.radioGender);
+            final RadioButton radioSexButton = (RadioButton) rootView.findViewById(radioSexGroup.getCheckedRadioButtonId());
 
             Button playButton=(Button)rootView.findViewById(R.id.button_play);
+
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent drawGestureIntent = new Intent(getActivity(), DrawGestureActivity.class);
-                    startActivity(drawGestureIntent);
+                    if(isEmpty(editTextUserName) || isEmpty(editTextAge)) {
+                        Toast.makeText(getActivity(), "Please fill in all the fields!", Toast.LENGTH_LONG).show();
+                    }else{
+                        int   age = Integer.parseInt(editTextAge.getText().toString());
+                        String userName= editTextUserName.getText().toString();
+                        String sex = radioSexButton.getText().toString();
+                        final UserModel model = new UserModel(sex, age, userName);
+                        UserDAO dao = new UserDAO(getActivity());
+                        long rowId2=-1;
+                        long rowId=  dao.saveUser(model);
+                        if(rowId!=-1) {
+                             rowId2 = dao.saveScore(model.getScore());
+                            Toast.makeText(getActivity(),userName+" registered",Toast.LENGTH_SHORT).show();
+
+                        }else{
+
+                            Toast.makeText(getActivity(),userName+" is an existing user",Toast.LENGTH_SHORT).show();
+                        }
+
+                        Intent drawGestureIntent = new Intent(getActivity(), DrawGestureActivity.class);
+                        drawGestureIntent.putExtra(Intent.EXTRA_TEXT, userName);
+                        drawGestureIntent.putExtra(Intent.EXTRA_UID,rowId);
+                        startActivity(drawGestureIntent);
+
+             //           getActivity().finish();
+                    }
                 }
             });
             return rootView;
         }
+
     }
-}
+    private static boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
+    }
+  }
+
