@@ -1,9 +1,11 @@
 package com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db;
 
+import java.io.Serializable;
+
 /**
  * Created by nitin on 9/20/14.
  */
-public class ScoresModel {
+public class ScoresModel implements Serializable {
 
 
     public int wins=0;

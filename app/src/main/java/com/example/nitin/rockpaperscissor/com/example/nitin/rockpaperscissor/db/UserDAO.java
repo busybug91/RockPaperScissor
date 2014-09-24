@@ -38,7 +38,7 @@ public class UserDAO implements UserDaoInterface {
     public long updateScore(ScoresModel scoresModel, int _ID)
     {
         sqLiteDatabase=rpsDbHelper.getWritableDatabase();
-        String whereClause="WHERE "+Contract.ScoresTable._ID+"=?";
+        String whereClause=Contract.ScoresTable._ID+"=?";
         String whereArgs[]= new String[1];
         whereArgs[0]=Integer.toString(_ID);
         ContentValues cv2= new ContentValues();
