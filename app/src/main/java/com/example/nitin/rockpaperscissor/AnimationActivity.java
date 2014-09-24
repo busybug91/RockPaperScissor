@@ -1,7 +1,7 @@
 package com.example.nitin.rockpaperscissor;
 
-import android.media.AudioManager;
-import android.media.SoundPool;
+
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -21,8 +21,7 @@ public class AnimationActivity extends ActionBarActivity {
     public static String user;
     public static String cpu;
     public static int res;
-    private SoundPool sp;
-    private int music;
+    private MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,23 +103,22 @@ public class AnimationActivity extends ActionBarActivity {
             imguser.setImageResource(R.drawable.scissors);
         }else{}
 
-        this.sp= new SoundPool(100, AudioManager.STREAM_SYSTEM, 100);
 
         if(res==0) {//lose
             Log.d("SOUND","YOU Loose");
-            this.music = this.sp.load(this, R.raw.lose, 1);
+            mp=MediaPlayer.create(this,R.raw.lose);
         }else if(res==1) {//win
             Log.d("SOUND","YOU WON");
-            this.music = this.sp.load(this, R.raw.win, 1);
+            mp=MediaPlayer.create(this,R.raw.win);
         }else{//draw
             Log.d("SOUND","It's a draw");
-            this.music = this.sp.load(this, R.raw.draw, 1);
+            mp=MediaPlayer.create(this,R.raw.draw);
         }
 
         Animation aniAlpha = AnimationUtils.loadAnimation(AnimationActivity.this, R.anim.alpha);
         Animation aniRotate = AnimationUtils.loadAnimation(AnimationActivity.this, R.anim.rotate);
 
-        this.sp.play(this.music,1,1,0,0,1);
+        mp.start();
         imguser.startAnimation(aniAlpha);
         imgpc.startAnimation(aniAlpha);
         tv.startAnimation(aniAlpha);
