@@ -2,28 +2,28 @@
 <pre-dex-items>
 
     <item
-        dex="/Users/Wanderxx/wxx/app/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-bca9cd8c8082330ef7549e0398af852faae531fd.jar"
+        dex="/Users/Wanderxx/RockPaperScissor/app/build/intermediates/pre-dexed/debug/classes-9dadee1f69c24541dba9de4084571286b6fd93c3.jar"
+        jar="/Users/Wanderxx/RockPaperScissor/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="f21927d22fe31889ecce94dd697a2e75b137e0ef"/>
+    <item
+        dex="/Users/Wanderxx/RockPaperScissor/app/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-bca9cd8c8082330ef7549e0398af852faae531fd.jar"
         jar="/Applications/Android Studio.app/sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
         jumboMode="false"
         revision="20.0.0"
         sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
     <item
-        dex="/Users/Wanderxx/wxx/app/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-98938b71b30fc730d8a7037a88e6d9d397d0bd4e.jar"
-        jar="/Users/Wanderxx/wxx/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
+        dex="/Users/Wanderxx/RockPaperScissor/app/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-2b2fbcf6e3f05697b5c93c26bf1f14d940ddca82.jar"
+        jar="/Users/Wanderxx/RockPaperScissor/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
         jumboMode="false"
         revision="20.0.0"
         sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
     <item
-        dex="/Users/Wanderxx/wxx/app/build/intermediates/pre-dexed/debug/classes-c172d8ab5ccafb1c0967040bcb69765bdd4aa200.jar"
-        jar="/Users/Wanderxx/wxx/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        dex="/Users/Wanderxx/RockPaperScissor/app/build/intermediates/pre-dexed/debug/classes-eb983ff648fbd7b9b7b1c6c7838c8576adc9991c.jar"
+        jar="/Users/Wanderxx/RockPaperScissor/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
         jumboMode="false"
         revision="20.0.0"
         sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
-    <item
-        dex="/Users/Wanderxx/wxx/app/build/intermediates/pre-dexed/debug/classes-cfee46ff0b8afa060f4f655815f35ee95d8ac68f.jar"
-        jar="/Users/Wanderxx/wxx/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/classes.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="f21927d22fe31889ecce94dd697a2e75b137e0ef"/>
 
 </pre-dex-items>

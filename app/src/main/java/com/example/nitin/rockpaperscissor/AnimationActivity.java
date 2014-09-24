@@ -17,14 +17,15 @@ import android.view.MotionEvent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
+import android.media.MediaPlayer;
 
 public class AnimationActivity extends ActionBarActivity {
 
     public static String user;
     public static String cpu;
     public static int res;
-    private SoundPool sp;
-    private int music;
+    private MediaPlayer mp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,20 +107,19 @@ public class AnimationActivity extends ActionBarActivity {
             imguser.setImageResource(R.drawable.scissors);
         }else{}
 
-        this.sp= new SoundPool(100, AudioManager.STREAM_SYSTEM, 100);
 
         if(res==0) {//lose
-            this.music = this.sp.load(this, R.raw.lose, 1);
+            mp=MediaPlayer.create(this,R.raw.lose);
         }else if(res==1) {//win
-            this.music = this.sp.load(this, R.raw.win, 1);
+            mp=MediaPlayer.create(this,R.raw.win);
         }else{//draw
-            this.music = this.sp.load(this, R.raw.draw, 1);
+            mp=MediaPlayer.create(this,R.raw.draw);
         }
 
         Animation aniAlpha = AnimationUtils.loadAnimation(AnimationActivity.this, R.anim.alpha);
         Animation aniRotate = AnimationUtils.loadAnimation(AnimationActivity.this, R.anim.rotate);
 
-        this.sp.play(this.music,1,1,0,0,1);
+        mp.start();
         imguser.startAnimation(aniAlpha);
         imgpc.startAnimation(aniAlpha);
         tv.startAnimation(aniAlpha);
