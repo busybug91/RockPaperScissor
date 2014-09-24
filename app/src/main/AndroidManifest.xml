@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.nitin.rockpaperscissor.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,12 +17,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.nitin.rockpaperscissor.DrawGestureActivity"
+            android:name=".DrawGestureActivity"
             android:label="@string/title_activity_draw_gesture" >
         </activity>
         <activity
             android:name=".AnimationActivity"
             android:label="@string/title_activity_animation" >
+        </activity>
+        <activity
+            android:name=".ScoreDetails"
+            android:label="@string/title_activity_score_details" >
         </activity>
     </application>
 

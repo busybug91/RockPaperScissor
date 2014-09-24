@@ -103,8 +103,11 @@ public class DrawGestureActivity extends ActionBarActivity {
                     int wins = user.getScore().getWins();
                     int losses = dao.findUser(userName).getScore().getLosses();
                     Toast.makeText(getActivity(),user.getScore().toString(),Toast.LENGTH_LONG).show();
-                }
-            });
+                    Intent scoreDetailsIntent= new Intent (getActivity(),ScoreDetails.class);
+                            scoreDetailsIntent.putExtra(UserModel.class.getSimpleName(),user);
+                       startActivity(scoreDetailsIntent);
+                        }
+                    });
 
             return rootView;
         }

@@ -8,4 +8,6 @@
     <string name="draw_gesture_area">Draw your choice here</string>
     <string name="unreognized_gesture">Sorry couldn\'t recognize gesture</string>
     <string name="title_activity_animation">AnimationActivity</string>
+    <string name="title_activity_score_details">ScoreDetails</string>
+
 </resources>

@@ -1,9 +1,11 @@
 package com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db;
 
+import java.io.Serializable;
+
 /**
  * Created by nitin on 9/19/14.
  */
-public class UserModel {
+public class UserModel implements Serializable {
     @Override
     public String toString() {
         return "UserModel{" +
