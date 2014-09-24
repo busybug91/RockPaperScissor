@@ -16,7 +16,9 @@ public class RPSDbHelper extends SQLiteOpenHelper {
 
     public RPSDbHelper(Context context)
     {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);    }
+        super(context, context.getExternalFilesDir(null).getAbsolutePath() + "/" + DATABASE_NAME, null, DATABASE_VERSION);
+        Log.d(TAG,context.getExternalFilesDir(null).getAbsolutePath() + "/" + DATABASE_NAME);
+    }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {

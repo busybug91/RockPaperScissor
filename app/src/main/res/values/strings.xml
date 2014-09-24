@@ -9,5 +9,9 @@
     <string name="unreognized_gesture">Sorry couldn\'t recognize gesture</string>
     <string name="title_activity_animation">AnimationActivity</string>
     <string name="title_activity_score_details">ScoreDetails</string>
+    <string name="title_activity_intructions">Intructions</string>
+    <string name="intruction_rock">To choose Rock draw R</string>
+<string name="intruction_paper">To choose Paper draw P</string>
+<string name="intruction_scissor">To choose Scissors draw S</string>
 
 </resources>

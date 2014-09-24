@@ -37,7 +37,7 @@ public class MyCPU {
         String result="";
         result=cpuGamer(userInput,"Normal");
         result=result+" in round" + (++Round) +"/3 ." ;
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
 
         Intent intent=new Intent(context,AnimationActivity.class);
         context.startActivity(intent);
@@ -106,10 +106,15 @@ public class MyCPU {
             int wins=(sm.getWins());
             sm.setWins(++wins);
         }
-        else {
-            result="win";
-            int wins=(sm.getWins());
-            sm.setWins(++wins);
+        else if (wins<0) {
+            result="loose";
+            int losses=sm.getLosses();
+            sm.setLosses(losses+1);
+
+        }
+        else
+        {
+            result="draw";
         }
         Round=0;
         wins=0;

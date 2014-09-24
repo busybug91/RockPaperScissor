@@ -72,7 +72,14 @@ public class MainActivity extends ActionBarActivity {
             final RadioButton radioSexButton = (RadioButton) rootView.findViewById(radioSexGroup.getCheckedRadioButtonId());
 
             Button playButton=(Button)rootView.findViewById(R.id.button_play);
-
+            Button instructionsButton=(Button)rootView.findViewById(R.id.button_instructions);
+            instructionsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent= new Intent(getActivity(),Intructions.class);
+                    startActivity(intent);
+                }
+            });
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

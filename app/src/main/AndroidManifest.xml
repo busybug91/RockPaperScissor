@@ -28,6 +28,10 @@
             android:name=".ScoreDetails"
             android:label="@string/title_activity_score_details" >
         </activity>
+        <activity
+            android:name=".Intructions"
+            android:label="@string/title_activity_intructions" >
+        </activity>
     </application>
 
 </manifest>

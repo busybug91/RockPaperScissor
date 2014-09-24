@@ -16,8 +16,8 @@
         android:textSize="25.0dp"
         android:textColor="@android:color/holo_blue_dark"
         android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_gravity="center"
+        />
 
 
     <TextView
@@ -109,4 +109,14 @@
         android:layout_toRightOf="@+id/textView3"
         android:layout_alignRight="@+id/editText" />
 
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="See Instructions"
+        android:id="@+id/button_instructions"
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/textView4"
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_alignRight="@+id/editText" />
 </LinearLayout>

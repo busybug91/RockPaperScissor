@@ -10,9 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Score History"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="80dp"
-        android:textSize="32sp"/>
+        android:textSize="32sp"
+        android:layout_gravity="center"/>
 
     <LinearLayout
         android:orientation="horizontal"
