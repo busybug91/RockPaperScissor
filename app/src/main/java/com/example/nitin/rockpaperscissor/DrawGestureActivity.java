@@ -1,5 +1,6 @@
-package com.example.nitin.rockpapersissor;
+package com.example.nitin.rockpaperscissor;
 
+import android.content.Intent;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
@@ -13,15 +14,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserDAO;
+import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserModel;
+
 
 public class DrawGestureActivity extends ActionBarActivity {
-
-
+    public static DrawGestureActivity instance=null;
     private static GestureLibrary gestureLibrary;
     private static GestureOverlayView overlay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance=this;
         setContentView(R.layout.activity_draw_gesture);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -60,8 +67,11 @@ public class DrawGestureActivity extends ActionBarActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             String TAG=this.getClass().getSimpleName().toString();
+            Intent intent = getActivity().getIntent();
+
+            final String userName = intent.getStringExtra(Intent.EXTRA_TEXT);
 
             View rootView = inflater.inflate(R.layout.fragment_draw_gesture, container, false);
 
@@ -69,7 +79,7 @@ public class DrawGestureActivity extends ActionBarActivity {
             overlay = (GestureOverlayView)rootView.findViewById(R.id.gestures_draw);
             //being done this way as I was unable to pass 'this' object to methods used for registering listeners
             overlay.addOnGesturingListener(new MyGesturingListener(getActivity()));
-            overlay.addOnGesturePerformedListener(new MyGesturePerformedListener(getActivity(),gestureLibrary));
+            overlay.addOnGesturePerformedListener(new MyGesturePerformedListener(getActivity(),gestureLibrary, userName));
 
             if(gestureLibrary==null)
             {
@@ -82,14 +92,22 @@ public class DrawGestureActivity extends ActionBarActivity {
                     getActivity().finish();
                 }
             }
+            Button btnScore= (Button)rootView.findViewById(R.id.button_score);
 
-            Button playAgain= (Button)rootView.findViewById(R.id.button_play_again);
-            playAgain.setOnClickListener(new View.OnClickListener() {
+            btnScore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    overlay.clear(false);
-                }
-            });
+                    //overlay.clear(false);
+                    UserDAO dao = new UserDAO(getActivity());
+                    UserModel user=dao.findUser(userName);
+                    int wins = user.getScore().getWins();
+                    int losses = dao.findUser(userName).getScore().getLosses();
+                    Toast.makeText(getActivity(),user.getScore().toString(),Toast.LENGTH_LONG).show();
+                    Intent scoreDetailsIntent= new Intent (getActivity(),ScoreDetails.class);
+                            scoreDetailsIntent.putExtra(UserModel.class.getSimpleName(),user);
+                       startActivity(scoreDetailsIntent);
+                        }
+                    });
 
             return rootView;
         }

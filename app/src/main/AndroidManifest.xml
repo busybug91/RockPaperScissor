@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.nitin.rockpapersissor" >
+    package="com.example.nitin.rockpaperscissor" >
 
     <application
         android:allowBackup="true"
@@ -20,17 +20,13 @@
             android:name=".DrawGestureActivity"
             android:label="@string/title_activity_draw_gesture" >
         </activity>
-
-
-
         <activity
-            android:name=".PlayActivity"
-            android:label="@string/title_activity_draw_gesture" >
+            android:name=".AnimationActivity"
+            android:label="@string/title_activity_animation" >
         </activity>
-
         <activity
-            android:name=".RegisterActivity"
-            android:label="@string/title_activity_draw_gesture" >
+            android:name=".ScoreDetails"
+            android:label="@string/title_activity_score_details" >
         </activity>
     </application>
 

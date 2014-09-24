@@ -1,11 +1,10 @@
-package com.example.nitin.rockpapersissor;
+package com.example.nitin.rockpaperscissor;
 
 import android.content.Context;
 import android.gesture.Gesture;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -14,13 +13,14 @@ import java.util.ArrayList;
  */
 public class MyGesturePerformedListener implements GestureOverlayView.OnGesturePerformedListener {
 
-
     GestureLibrary gestureLibrary=null;
     Context context=null;
-    MyGesturePerformedListener(Context context, GestureLibrary gestureLibrary)
+    String userName=null;
+    MyGesturePerformedListener(Context context, GestureLibrary gestureLibrary, String userName)
     {
         this.context=context;
         this.gestureLibrary=gestureLibrary;
+        this.userName=userName;
     }
     @Override
     public void onGesturePerformed(GestureOverlayView gestureOverlayView, Gesture gesture) {
@@ -29,6 +29,7 @@ public class MyGesturePerformedListener implements GestureOverlayView.OnGestureP
         //Else create a threshold and learn from user's input.
         ArrayList<Prediction> predictions=gestureLibrary.recognize(gesture);
         String predictionName=null;
+        String result="";
 
         for(Prediction p:predictions)
         {
@@ -58,13 +59,16 @@ public class MyGesturePerformedListener implements GestureOverlayView.OnGestureP
 
             }
             else
-                userInput="Unknown gesture name";
+                userInput="Unknown";
+            //Toast.makeText(context, "Your choice is "+userInput,Toast.LENGTH_SHORT).show();
+            MyCPU cpu=new MyCPU(context,userName);
+            cpu.cpuGame(userInput,"Normal");
 
-
-            Toast.makeText(context, "Your choice is "+userInput,Toast.LENGTH_SHORT).show();
-
+            //Update data in DB
             //clear the area for new gesture
 
         }
     }
+
+
 }

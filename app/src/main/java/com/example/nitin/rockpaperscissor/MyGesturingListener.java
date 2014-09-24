@@ -1,4 +1,4 @@
-package com.example.nitin.rockpapersissor;
+package com.example.nitin.rockpaperscissor;
 
 import android.content.Context;
 import android.gesture.GestureOverlayView;
