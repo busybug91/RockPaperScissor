@@ -69,6 +69,9 @@ public class DrawGestureActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             String TAG=this.getClass().getSimpleName().toString();
+            Intent intent = getActivity().getIntent();
+
+            final String userName = intent.getStringExtra(Intent.EXTRA_TEXT);
 
             View rootView = inflater.inflate(R.layout.fragment_draw_gesture, container, false);
 
@@ -76,7 +79,7 @@ public class DrawGestureActivity extends ActionBarActivity {
             overlay = (GestureOverlayView)rootView.findViewById(R.id.gestures_draw);
             //being done this way as I was unable to pass 'this' object to methods used for registering listeners
             overlay.addOnGesturingListener(new MyGesturingListener(getActivity()));
-            overlay.addOnGesturePerformedListener(new MyGesturePerformedListener(getActivity(),gestureLibrary));
+            overlay.addOnGesturePerformedListener(new MyGesturePerformedListener(getActivity(),gestureLibrary, userName));
 
             if(gestureLibrary==null)
             {
@@ -89,8 +92,6 @@ public class DrawGestureActivity extends ActionBarActivity {
                     getActivity().finish();
                 }
             }
-            Intent intent = getActivity().getIntent();
-            final String userName = intent.getStringExtra(Intent.EXTRA_TEXT);
             Button btnScore= (Button)rootView.findViewById(R.id.button_score);
 
             btnScore.setOnClickListener(new View.OnClickListener() {

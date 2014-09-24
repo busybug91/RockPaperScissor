@@ -88,13 +88,19 @@ public class MainActivity extends ActionBarActivity {
                         long rowId=  dao.saveUser(model);
                         if(rowId!=-1) {
                              rowId2 = dao.saveScore(model.getScore());
+                            Toast.makeText(getActivity(),userName+" registered",Toast.LENGTH_SHORT).show();
+
+                        }else{
+
+                            Toast.makeText(getActivity(),userName+" is an existing user",Toast.LENGTH_SHORT).show();
                         }
 
-                        Toast.makeText(getActivity(),userName+Long.toString(rowId)+" "+Long.toString(rowId2),Toast.LENGTH_LONG).show();
                         Intent drawGestureIntent = new Intent(getActivity(), DrawGestureActivity.class);
                         drawGestureIntent.putExtra(Intent.EXTRA_TEXT, userName);
+                        drawGestureIntent.putExtra(Intent.EXTRA_UID,rowId);
                         startActivity(drawGestureIntent);
-                        getActivity().finish();
+
+             //           getActivity().finish();
                     }
                 }
             });

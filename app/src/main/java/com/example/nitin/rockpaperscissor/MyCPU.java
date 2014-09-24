@@ -8,6 +8,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.ScoresModel;
+import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserDAO;
+import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserModel;
 
 /**
  * Created by Xiaoxuan Wang on 9/20/14.
@@ -16,11 +18,14 @@ public class MyCPU {
     public static int Round=0;
     public static int wins=0;
     public Context context;
-    
-    ScoresModel sm = new ScoresModel();
+    String userName=null;
+    UserModel userModel=null;
+    ScoresModel sm = null;
 
-    public MyCPU(Context ctx){
+    public MyCPU(Context ctx, String userName){
         this.context=ctx;
+        this.userName=userName;
+        ScoresModel sm= new ScoresModel();
     }
 
     public void cpuGame(String userInput,String gameMode){
@@ -106,6 +111,11 @@ public class MyCPU {
 
         //insert DB **YIFEI SHOULD WORK HERE
 
+        /*Yifei was supposed to work here but skipped this part also like many other parts.*/
+
+        /*You cannot just create a ScoresModel object and save data to it. You should remember who the user is through out
+        * the application and make changes to his ScoresModel --by Nitin */
+
         new AlertDialog.Builder(context)
                 .setTitle("You "+result)
                 .setPositiveButton("Start New Game",
@@ -116,6 +126,14 @@ public class MyCPU {
                                 // DrawGestureActivity.instance.onCreate(null); //refresh
                                 DrawGestureActivity.instance.finish();
                                 Intent intent = new Intent(context, DrawGestureActivity.class);
+                                intent.putExtra(Intent.EXTRA_TEXT,userName);
+                                UserDAO userDao= new UserDAO(context);
+                                UserModel user=userDao.findUser(userName);
+                                int rowId=user.getUserId();
+                                long resultID=userDao.updateScore(sm,rowId);
+                                if(resultID==-1){
+                                    Toast.makeText(context,"Unable to save your results",Toast.LENGTH_SHORT).show();
+                                }
                                 context.startActivity(intent);
                             }
                         })

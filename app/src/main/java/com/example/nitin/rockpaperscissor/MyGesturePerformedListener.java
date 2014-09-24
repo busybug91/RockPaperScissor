@@ -15,10 +15,12 @@ public class MyGesturePerformedListener implements GestureOverlayView.OnGestureP
 
     GestureLibrary gestureLibrary=null;
     Context context=null;
-    MyGesturePerformedListener(Context context, GestureLibrary gestureLibrary)
+    String userName=null;
+    MyGesturePerformedListener(Context context, GestureLibrary gestureLibrary, String userName)
     {
         this.context=context;
         this.gestureLibrary=gestureLibrary;
+        this.userName=userName;
     }
     @Override
     public void onGesturePerformed(GestureOverlayView gestureOverlayView, Gesture gesture) {
@@ -59,7 +61,7 @@ public class MyGesturePerformedListener implements GestureOverlayView.OnGestureP
             else
                 userInput="Unknown";
             //Toast.makeText(context, "Your choice is "+userInput,Toast.LENGTH_SHORT).show();
-            MyCPU cpu=new MyCPU(context);
+            MyCPU cpu=new MyCPU(context,userName);
             cpu.cpuGame(userInput,"Normal");
 
             //Update data in DB

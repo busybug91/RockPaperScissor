@@ -35,6 +35,22 @@ public class UserDAO implements UserDaoInterface {
         return rowId;
     }
 
+    public long updateScore(ScoresModel scoresModel, int _ID)
+    {
+        sqLiteDatabase=rpsDbHelper.getWritableDatabase();
+        String whereClause="WHERE "+Contract.ScoresTable._ID+"=?";
+        String whereArgs[]= new String[1];
+        whereArgs[0]=Integer.toString(_ID);
+        ContentValues cv2= new ContentValues();
+        cv2.put(Contract.ScoresTable.COLUMN_WINS,scoresModel.getWins());
+        cv2.put(Contract.ScoresTable.COLUMN_LOSSES, scoresModel.getLosses());
+        long rowId=sqLiteDatabase.update(Contract.ScoresTable.TABLE_NAME,cv2,whereClause,
+                whereArgs
+                );
+        sqLiteDatabase.close();
+        return rowId;
+
+    }
     @Override
     public long saveUser(UserModel user) {
         sqLiteDatabase=rpsDbHelper.getWritableDatabase();
