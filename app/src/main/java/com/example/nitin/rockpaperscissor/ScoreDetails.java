@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserModel;
 
@@ -59,7 +60,16 @@ public class ScoreDetails extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_score_details, container, false);
             Intent receivedIntent=(Intent)getActivity().getIntent();
             UserModel user=(UserModel)receivedIntent.getSerializableExtra(UserModel.class.getSimpleName());
-
+            TextView textViewUserName=(TextView)rootView.findViewById(R.id.userName);
+            TextView textViewAge=(TextView)rootView.findViewById(R.id.age);
+            TextView textViewSex=(TextView) rootView.findViewById(R.id.sex);
+            TextView textViewWins=(TextView)rootView.findViewById(R.id.wins);
+            TextView textViewLosses=(TextView)rootView.findViewById(R.id.losses);
+            textViewUserName.setText(user.getUserName());
+            textViewAge.setText(Integer.toString(user.getAge()));
+            textViewSex.setText(user.getSex());
+            textViewLosses.setText(Integer.toString(user.getScore().getLosses()));
+            textViewWins.setText(Integer.toString(user.getScore().getWins()));
             return rootView;
         }
     }
