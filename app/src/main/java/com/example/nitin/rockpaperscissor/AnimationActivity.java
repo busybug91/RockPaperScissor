@@ -91,8 +91,10 @@ public class AnimationActivity extends ActionBarActivity {
             imgpc.setImageResource(R.drawable.paper);
         }else if(cpu.equals("Rock")){
             imgpc.setImageResource(R.drawable.rock);
-        }else{
+        }else if(cpu.equals("Scissor")){
             imgpc.setImageResource(R.drawable.scissors);
+        }else{
+            imgpc.setImageResource(R.drawable.ic_launcher);
         }
 
         if(user.equals("Paper")) {
@@ -101,7 +103,9 @@ public class AnimationActivity extends ActionBarActivity {
             imguser.setImageResource(R.drawable.rock);
         }else if(user.equals("Scissor")){
             imguser.setImageResource(R.drawable.scissors);
-        }else{}
+        }else{
+            imguser.setImageResource(R.drawable.ic_launcher);
+        }
 
 
         if(res==0) {//lose

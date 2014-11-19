@@ -33,6 +33,61 @@ public class MyCPU {
         rowId=user.getUserId();
     }
 
+    //----Multiple players
+    public void blueGame(String user1,String user2){
+        String result="";
+        result=blueGamer(user1,user2);
+        result=result+" in round" + (++Round) +"/3 ." ;
+        Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
+
+        Intent intent=new Intent(context,AnimationActivity.class);
+        context.startActivity(intent);
+
+        if(Round==3 || wins==2 || wins==-2) NextGame();
+    }
+
+    public String blueGamer(String user1,String user2){
+        String result="";
+        int temp=0;
+
+        if (user1.equals("Unknown") && user2.equals("Unknown")){
+            return "Please draw one gesture.";
+        }
+        else if(user1.equals("Unknown") && !user2.equals("Unknown")){
+            result="lose";
+            wins--;
+        }
+        else if(!user1.equals("Unknown") && user2.equals("Unknown")){
+            result="win";
+            wins++;
+        }
+        else {
+            temp = gameHelper(user1, user2);
+
+            switch (temp) {
+                case -1:
+                    result = "draw";
+                    break;
+                case 0:
+                    result = "lose";
+                    wins--;
+                    break;
+                case 1:
+                    result = "win";
+                    wins++;
+                    break;
+            }
+
+            AnimationActivity.user = user1;
+            AnimationActivity.cpu = user2;
+            AnimationActivity.res = temp;
+        }
+
+        return "Your gesture is " + user1 + ", opponent's gesture is " + user2 + ", you " + result;
+    }
+
+
+    //------------Single Player
     public void cpuGame(String userInput,String gameMode){
         String result="";
         result=cpuGamer(userInput,"Normal");
