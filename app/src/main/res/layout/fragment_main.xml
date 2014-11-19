@@ -104,7 +104,15 @@
         android:text="Play"
         android:id="@+id/button_play"
         android:layout_toEndOf="@+id/textView3"
-        android:layout_marginTop="30dp"
+        android:layout_below="@+id/textView4"
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_alignRight="@+id/editText" />
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Play with bluetooth"
+        android:id="@+id/button_play_bt"
+        android:layout_toEndOf="@+id/textView3"
         android:layout_below="@+id/textView4"
         android:layout_toRightOf="@+id/textView3"
         android:layout_alignRight="@+id/editText" />
@@ -115,7 +123,6 @@
         android:text="See Instructions"
         android:id="@+id/button_instructions"
         android:layout_toEndOf="@+id/textView3"
-        android:layout_marginTop="30dp"
         android:layout_below="@+id/textView4"
         android:layout_toRightOf="@+id/textView3"
         android:layout_alignRight="@+id/editText" />

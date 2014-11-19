@@ -1,5 +1,6 @@
 package com.example.nitin.rockpaperscissor;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,8 @@ import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.
 
 public class MainActivity extends ActionBarActivity {
 
+    private static final int REQUEST_ENABLE_BT = 2;
+    static private BluetoothAdapter bluetoothAdapter=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +83,29 @@ public class MainActivity extends ActionBarActivity {
                     startActivity(intent);
                 }
             });
+            Button playWithBluetooth= (Button) rootView.findViewById(R.id.button_play_bt);
+            playWithBluetooth.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
+                    if(null == bluetoothAdapter)
+                    {
+                        Toast.makeText(getActivity(), getString(R.string.bt_unavailable_msg), Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        if(!bluetoothAdapter.isEnabled()) {
+                            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            getActivity().startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                        }
+                        else{
+
+                            Toast.makeText(getActivity(), getString(R.string.bt_enabled), Toast.LENGTH_LONG).show();
+                        }
+                      }
+                }
+            });
+
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -118,5 +144,32 @@ public class MainActivity extends ActionBarActivity {
     private static boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
     }
-  }
-
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data){
+        Toast.makeText(this, getString(R.string.bt_enabled), Toast.LENGTH_LONG).show();
+        switch(requestCode) {
+            /*
+            case REQUEST_CONNECT_DEVICE:
+                if (resultCode == Activity.RESULT_OK) {
+                    // When DeviceListActivity returns with a device to connect
+                    String address = data.getExtras().getString("deviceaddr");
+                    // Get the BLuetoothDevice object
+                    BluetoothDevice device = btAdp.getRemoteDevice(address);
+                    if (mGameService == null) setupGame();
+                    mGameService.connect(device);
+                }
+                break;
+            */
+            case REQUEST_ENABLE_BT:
+                if (bluetoothAdapter.isEnabled()) {
+                    Toast.makeText(this, getString(R.string.bt_enabled), Toast.LENGTH_LONG).show();
+                    //       Intent btActStart = new Intent(MainActivity.this,BtMainActivity.class);
+                    //     startActivityForResult(btActStart, REQUEST_CONNECT_DEVICE);
+                } else {
+                    Toast.makeText(this, getString(R.string.bt_not_enabled), Toast.LENGTH_LONG).show();
+                }
+                break;
+            default:
+        }
+     }
+    }
