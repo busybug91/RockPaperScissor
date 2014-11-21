@@ -13,10 +13,11 @@
     <string name="intruction_rock">To choose Rock draw R</string>
     <string name="bt_unavailable_msg">Unfortunately, you cannot use this service as your device does not support bluetooth.</string>
     <string name="bt_enabled">Bluetooth enabled. You can play the game in multi-player mode.</string>
-
     <string name="intruction_paper">To choose Paper draw P</string>
-
     <string name="intruction_scissor">To choose Scissors draw S</string>
     <string name="bt_not_enabled">You can\'t play without turning on bluetooh.</string>
+    <string name="title_activity_play_with_bluetooth">PlayWithBluetooth</string>
+    <string name="title_activity_multiplayer_welcome">MultiplayerWelcome</string>
+    <string name="title_activity_draw_gesture_multiplayer">DrawGestureMultiplayer</string>
 
 </resources>

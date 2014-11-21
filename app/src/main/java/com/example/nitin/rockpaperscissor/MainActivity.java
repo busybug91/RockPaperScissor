@@ -1,6 +1,7 @@
 package com.example.nitin.rockpaperscissor;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -101,6 +102,7 @@ public class MainActivity extends ActionBarActivity {
                         else{
 
                             Toast.makeText(getActivity(), getString(R.string.bt_enabled), Toast.LENGTH_LONG).show();
+                            startMultiplayerMode(getActivity(), editTextUserName, editTextAge, radioSexButton);
                         }
                       }
                 }
@@ -172,4 +174,42 @@ public class MainActivity extends ActionBarActivity {
             default:
         }
      }
+    private static void startMultiplayerMode(Context context, EditText editTextUserName, EditText editTextAge,
+                                             RadioButton radioSexButton)
+    {
+
+        if(isEmpty(editTextUserName) || isEmpty(editTextAge)) {
+            Toast.makeText(context, "Please fill in all the fields!", Toast.LENGTH_LONG).show();
+        }else{
+            int   age = Integer.parseInt(editTextAge.getText().toString());
+            String userName= editTextUserName.getText().toString();
+            String sex = radioSexButton.getText().toString();
+            final UserModel model = new UserModel(sex, age, userName);
+            UserDAO dao = new UserDAO(context);
+            long rowId2=-1;
+            long rowId=  dao.saveUser(model);
+            if(rowId!=-1) {
+                rowId2 = dao.saveScore(model.getScore());
+                Toast.makeText(context,userName+" registered",Toast.LENGTH_SHORT).show();
+
+            }else{
+
+                Toast.makeText(context,userName+" is an existing user",Toast.LENGTH_SHORT).show();
+            }
+
+            Intent multiPlayerWelIntent = new Intent(context, MultiplayerWelcome.class);
+            multiPlayerWelIntent.putExtra(Intent.EXTRA_TEXT, userName);
+            multiPlayerWelIntent.putExtra(Intent.EXTRA_UID,rowId);
+            context.startActivity(multiPlayerWelIntent);
+
+            /*
+            Intent playWithBluetoothIntent = new Intent(context, PlayWithBluetooth.class);
+            playWithBluetoothIntent.putExtra(Intent.EXTRA_TEXT, userName);
+            playWithBluetoothIntent.putExtra(Intent.EXTRA_UID,rowId);
+            context.startActivity(playWithBluetoothIntent);
+            */
+        }
+
+
+      }
     }
