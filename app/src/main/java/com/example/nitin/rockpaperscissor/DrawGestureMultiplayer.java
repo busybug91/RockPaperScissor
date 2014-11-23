@@ -69,8 +69,8 @@ public class DrawGestureMultiplayer extends Activity {
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
 
-    public int sentCode = -1;
-    public int recvCode = -1;
+    public String sentCode ="";
+    public String recvCode = "";
 
     private Button play;
     private Button quit;
@@ -226,11 +226,13 @@ public class DrawGestureMultiplayer extends Activity {
                             // End of game message
                             break;
                         default:
-                            sentCode = val1;
+                            sentCode = writeMessage;
                             codeSentFlag = true;
 
                             if(codeRecvFlag == true){
                         //        findWinner();
+                                MyCPU mycpu=new MyCPU(getApplicationContext(),userName);
+                                mycpu.blueGame(sentCode,recvCode);
                             }
                             break;
                     }
@@ -257,11 +259,13 @@ public class DrawGestureMultiplayer extends Activity {
                           //  playDisallow();
                             break;
                         default:
-                            recvCode = val2;
+                            recvCode = readMessage;
                             codeRecvFlag = true;
 
                             if(codeSentFlag == true){
                       //          findWinner();
+                                MyCPU mycpu=new MyCPU(getApplicationContext(),userName);
+                                mycpu.blueGame(sentCode,recvCode);
                             }
                             break;
                     }
@@ -305,9 +309,9 @@ public class DrawGestureMultiplayer extends Activity {
         HashMap<String, Integer> codeMap= new HashMap<String, Integer>();
 
         codeMap.put("start"   , 0 );
-        codeMap.put("rock"    , 1 );
-        codeMap.put("paper"   , 2 );
-        codeMap.put("scissors", 3 );
+        codeMap.put("Rock"    , 1 );
+        codeMap.put("Raper"   , 2 );
+        codeMap.put("Scissors", 3 );
         codeMap.put("stop"    , 4 );
         return codeMap;
     }
