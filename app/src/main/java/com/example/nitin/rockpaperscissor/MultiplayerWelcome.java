@@ -1,6 +1,5 @@
 package com.example.nitin.rockpaperscissor;
 
-import android.widget.AdapterView.OnItemClickListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
@@ -10,12 +9,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -26,10 +27,14 @@ import java.util.Set;
 
 public class MultiplayerWelcome extends Activity {
 
-    private static BluetoothGameService mGameService = null;
+   // private static BluetoothGameService mGameService = null;
     private static Context _context=null;
     private  static Activity thisActivity=null;
     private static BluetoothAdapter bluetoothAdapter=null;
+
+    private static long userID;
+    private static String userName;
+
 
     private static ArrayAdapter<String> BTArrayAdapter;
 
@@ -37,7 +42,6 @@ public class MultiplayerWelcome extends Activity {
     final static BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(_context, "In bluetooth broadcast receiver", Toast.LENGTH_SHORT).show();
             String action = intent.getAction();
             // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
@@ -55,6 +59,7 @@ public class MultiplayerWelcome extends Activity {
             bluetoothAdapter.cancelDiscovery();
         }
         else {
+            BTArrayAdapter.clear();
             bluetoothAdapter.startDiscovery();
             Toast.makeText(_context, "Discovering devices", Toast.LENGTH_SHORT).show();
             thisActivity.registerReceiver(mReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
@@ -108,6 +113,13 @@ public class MultiplayerWelcome extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_multiplayer_welcome, container, false);
             Button dicoverableBtn= (Button) rootView.findViewById(R.id.btn_discoverable);
             bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
+
+            userName=getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
+
+            userID=getActivity().getIntent().getLongExtra(Intent.EXTRA_UID,-1);
+
+            Log.d(getClass().getSimpleName().toString(),"Username is: "+userName+" and userId is "+userID );
+
             dicoverableBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -161,6 +173,8 @@ public class MultiplayerWelcome extends Activity {
 
                     Intent intent = new Intent(getActivity(),DrawGestureMultiplayer.class);
                     intent.putExtra("deviceaddr", address);
+                    intent.putExtra(Intent.EXTRA_TEXT, userName);
+                    intent.putExtra(Intent.EXTRA_UID,userID);
                     // Set result and finish this Activity
                     startActivity(intent);
                     //getActivity().setResult(Activity.RESULT_OK, intent);
