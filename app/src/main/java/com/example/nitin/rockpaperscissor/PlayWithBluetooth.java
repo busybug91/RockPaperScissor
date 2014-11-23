@@ -1,12 +1,12 @@
 package com.example.nitin.rockpaperscissor;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,8 +19,8 @@ import android.widget.Toast;
 import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserDAO;
 import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserModel;
 
+public class PlayWithBluetooth extends Activity {
 
-public class DrawGestureActivity extends ActionBarActivity {
     public static DrawGestureActivity instance=null;
     private static GestureLibrary gestureLibrary;
     private static GestureOverlayView overlay;
@@ -28,10 +28,9 @@ public class DrawGestureActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        instance=this;
-        setContentView(R.layout.activity_draw_gesture);
+        setContentView(R.layout.activity_play_with_bluetooth);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
@@ -41,7 +40,7 @@ public class DrawGestureActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.draw_gesture, menu);
+        getMenuInflater().inflate(R.menu.play_with_bluetooth, menu);
         return true;
     }
 
@@ -60,19 +59,21 @@ public class DrawGestureActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment  {
+    public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+                Bundle savedInstanceState) {
+
             String TAG=this.getClass().getSimpleName().toString();
             Intent intent = getActivity().getIntent();
             final String userName = intent.getStringExtra(Intent.EXTRA_TEXT);
 
-            View rootView = inflater.inflate(R.layout.fragment_draw_gesture, container, false);
+
+            View rootView = inflater.inflate(R.layout.fragment_play_with_bluetooth, container, false);
 
             gestureLibrary= GestureLibraries.fromRawResource(getActivity(), R.raw.gestures);
             overlay = (GestureOverlayView)rootView.findViewById(R.id.gestures_draw);
@@ -80,9 +81,10 @@ public class DrawGestureActivity extends ActionBarActivity {
             overlay.addOnGesturingListener(new MyGesturingListener(getActivity()));
             overlay.addOnGesturePerformedListener(new MyGesturePerformedListener(getActivity(),gestureLibrary, userName));
 
+
             if(gestureLibrary==null)
             {
-                Log.e(TAG,"Gestures file not found");
+                Log.e(TAG, "Gestures file not found");
             }
             else{
 
@@ -91,6 +93,7 @@ public class DrawGestureActivity extends ActionBarActivity {
                     getActivity().finish();
                 }
             }
+
             Button btnScore= (Button)rootView.findViewById(R.id.button_score);
 
             btnScore.setOnClickListener(new View.OnClickListener() {
@@ -101,13 +104,12 @@ public class DrawGestureActivity extends ActionBarActivity {
                     UserModel user=dao.findUser(userName);
                     int wins = user.getScore().getWins();
                     int losses = dao.findUser(userName).getScore().getLosses();
-                    Toast.makeText(getActivity(),user.getScore().toString(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), user.getScore().toString(), Toast.LENGTH_LONG).show();
                     Intent scoreDetailsIntent= new Intent (getActivity(),ScoreDetails.class);
-                            scoreDetailsIntent.putExtra(UserModel.class.getSimpleName(),user);
-                       startActivity(scoreDetailsIntent);
-                        }
-                    });
-
+                    scoreDetailsIntent.putExtra(UserModel.class.getSimpleName(),user);
+                    startActivity(scoreDetailsIntent);
+                }
+            });
             return rootView;
         }
     }

@@ -3,6 +3,7 @@
     package="com.example.nitin.rockpaperscissor" >
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -32,6 +33,18 @@
         <activity
             android:name=".Intructions"
             android:label="@string/title_activity_intructions" >
+        </activity>
+        <activity
+            android:name=".PlayWithBluetooth"
+            android:label="@string/title_activity_play_with_bluetooth" >
+        </activity>
+        <activity
+            android:name=".MultiplayerWelcome"
+            android:label="@string/title_activity_multiplayer_welcome" >
+        </activity>
+        <activity
+            android:name=".DrawGestureMultiplayer"
+            android:label="@string/title_activity_draw_gesture_multiplayer" >
         </activity>
     </application>
 
