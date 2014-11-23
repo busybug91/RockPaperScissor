@@ -1,48 +1,54 @@
 package com.example.nitin.rockpaperscissor;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
+import android.content.Intent;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserDAO;
+import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserModel;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class DrawGestureMultiplayer extends Activity {
 
-    private static Activity thisActivity=null;
-    private static BluetoothAdapter bluetoothAdapter=null;
+    public  DrawGestureActivity instance=null;
+    private  GestureLibrary gestureLibrary;
+    private  GestureOverlayView overlay;
+    private String userName;
+    private long userId;
 
     SensorManager sensorManager = null;
     TextView oriX, oriY, oriZ;
     TextView accX, accY, accZ;
     TextView info;
     ImageView iv1, iv2;
- private static BluetoothGameService bluetoothGameService;
-    private static Context _context;
 
     Float azimut;
-    static boolean singlePlayer = false;
-    static boolean sentStart    = false;
-    static boolean sentStop     = false;
-    static boolean codeSentFlag = false;
-    static boolean codeRecvFlag = false;
-    static boolean doneFlag     = false;
+    boolean singlePlayer = false;
+    boolean sentStart    = false;
+    boolean sentStop     = false;
+    boolean codeSentFlag = false;
+    boolean codeRecvFlag = false;
+    boolean doneFlag     = false;
 
     private String mConnectedDeviceName = null;
     private static final int handStart    = 0;
@@ -73,22 +79,118 @@ public class DrawGestureMultiplayer extends Activity {
     private ImageButton paper;
     private ImageButton scissors;
 
-    public static Map<String,Integer> codeMap = new HashMap<String,Integer>();
+    public Map<String,Integer> codeMap;
 
+    private timerThread thread;
+    private String TAG=getClass().getSimpleName().toString();
+
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothGameService mGameService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_draw_gesture_multiplayer);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
+        setContentView(R.layout.activity_draw_gesture_multiplayer2);
+
+
+        bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
+        Intent recIntent= getIntent();
+        codeMap=setUpMap();
+
+        // When DeviceListActivity returns with a device to connect
+        userName=recIntent.getStringExtra(Intent.EXTRA_TEXT);
+        userId=recIntent.getLongExtra(Intent.EXTRA_UID,-1);
+
+        Log.d(TAG,"Username is: "+userName+" and userId is "+userId );
+
+        String address = recIntent.getExtras().getString("deviceaddr");
+        // Get the BLuetoothDevice object
+        Log.d(TAG,"Device address is: "+address);
+        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+        if (mGameService == null) setupGame();
+
+        mGameService.connect(device);
+
+
+        gestureLibrary= GestureLibraries.fromRawResource(this, R.raw.gestures);
+        overlay = (GestureOverlayView)findViewById(R.id.gestures_draw);
+        //being done this way as I was unable to pass 'this' object to methods used for registering listeners
+        overlay.addOnGesturingListener(new MyGesturingListener(this));
+        overlay.addOnGesturePerformedListener(new MyGesturePerformedListener(this,gestureLibrary, userName));
+
+        if(gestureLibrary==null)
+        {
+            Log.e(TAG,"Gestures file not found");
+        }
+        else{
+
+            if(!gestureLibrary.load()){
+                Log.e(TAG,"Error loading gestures from file");
+                finish();
+            }
+        }
+        Button btnScore= (Button)findViewById(R.id.button_score);
+
+        btnScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //overlay.clear(false);
+                UserDAO dao = new UserDAO(getApplicationContext());
+                UserModel user=dao.findUser(userName);
+                int wins = user.getScore().getWins();
+                int losses = dao.findUser(userName).getScore().getLosses();
+                Toast.makeText(getApplicationContext(),user.getScore().toString(),Toast.LENGTH_LONG).show();
+                Intent scoreDetailsIntent= new Intent (getApplicationContext(),ScoreDetails.class);
+                scoreDetailsIntent.putExtra(UserModel.class.getSimpleName(),user);
+                startActivity(scoreDetailsIntent);
+            }
+        });
+
+
+    }
+    private void setupGame() {
+          mGameService=new BluetoothGameService(this, mHandler);
+        //Anything required to set-up the game.
+
+    }
+
+    private void sendNewMessage(String message) {
+        // Check that we're actually connected before trying anything
+        if (mGameService.getState() != BluetoothGameService.STATE_CONNECTED) {
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check that there's actually something to send
+        if (message.length() > 0) {
+            // Get the message bytes and tell the BluetoothChatService to write
+            byte[] send = message.getBytes();
+            mGameService.write(send);
         }
     }
 
+    private int genVal(){
+        Random r = new Random();
+        int k = r.nextInt(3) + 1;
 
-  //  The Handler that gets information back from the BluetoothChatService
-    private static final android.os.Handler mHandler = new Handler() {
+        return k;
+    }
+
+    private class timerThread extends Thread
+    {
+        @Override
+        public void run() {
+            try {
+                while(sentStop == false) {
+                    sendNewMessage("start");
+                    sleep(5000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    // The Handler that gets information back from the BluetoothChatService
+    private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -114,13 +216,13 @@ public class DrawGestureMultiplayer extends Activity {
                         case handStart:
                             //You challenge opponent to a game
                             sentStart = true;
-                            Toast.makeText(thisActivity, "PLAY!"
-                                    , Toast.LENGTH_SHORT).show();
-                            playAllow();
+                            Toast.makeText(getApplicationContext(), "PLAY!"
+                                    ,Toast.LENGTH_SHORT).show();
+                      //      playAllow();
                             break;
                         case handStop:
                             sentStop = true;
-                            playDisallow();
+                        //    playDisallow();
                             // End of game message
                             break;
                         default:
@@ -128,7 +230,7 @@ public class DrawGestureMultiplayer extends Activity {
                             codeSentFlag = true;
 
                             if(codeRecvFlag == true){
-                                findWinner();
+                        //        findWinner();
                             }
                             break;
                     }
@@ -142,24 +244,24 @@ public class DrawGestureMultiplayer extends Activity {
                     switch(val2){
                         case handStart:
                             if(sentStart == false){
-                                MainActivity.this.sendMessage("start");
+                               sendNewMessage("start");
                             }
                             //Opponent challenges you to a game
                             Toast.makeText(getApplicationContext(), "PLAY!"
                                     ,Toast.LENGTH_SHORT).show();
-                            playAllow();
+                        //    playAllow();
                             break;
                         case handStop:
                             // End of game message
                             sentStop = true;
-                            playDisallow();
+                          //  playDisallow();
                             break;
                         default:
                             recvCode = val2;
                             codeRecvFlag = true;
 
                             if(codeSentFlag == true){
-                                findWinner();
+                      //          findWinner();
                             }
                             break;
                     }
@@ -177,6 +279,7 @@ public class DrawGestureMultiplayer extends Activity {
             }
         }
     };
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -197,44 +300,15 @@ public class DrawGestureMultiplayer extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_draw_gesture_multiplayer, container, false);
-
-            codeMap.put("start"   , 0 );
-            codeMap.put("rock"    , 1 );
-            codeMap.put("paper"   , 2 );
-            codeMap.put("scissors", 3 );
-            codeMap.put("stop"    , 4 );
-
-            bluetoothGameService= new BluetoothGameService(getActivity(), mHandler);
-            bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
-            _context=getActivity();
-
-            thisActivity=getActivity();
-            //setting up game engine
-            setUp();
-
-            return rootView;
-        }
-    }
-    private static void setUp()
+    private HashMap<String, Integer> setUpMap()
     {
-        String address = thisActivity.getIntent().getExtras().getString("deviceaddr");
-        // Get the BLuetoothDevice object
-        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+        HashMap<String, Integer> codeMap= new HashMap<String, Integer>();
 
-        bluetoothGameService.connect(device);
-
-
+        codeMap.put("start"   , 0 );
+        codeMap.put("rock"    , 1 );
+        codeMap.put("paper"   , 2 );
+        codeMap.put("scissors", 3 );
+        codeMap.put("stop"    , 4 );
+        return codeMap;
     }
 }
