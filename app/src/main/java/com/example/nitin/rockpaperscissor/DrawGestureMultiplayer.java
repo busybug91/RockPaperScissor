@@ -3,10 +3,13 @@ package com.example.nitin.rockpaperscissor;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
+import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserDAO;
 import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.UserModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -35,6 +39,8 @@ public class DrawGestureMultiplayer extends Activity {
     private  GestureOverlayView overlay;
     private String userName;
     private long userId;
+    public static String input;
+    Intent recIntent;
 
     SensorManager sensorManager = null;
     TextView oriX, oriY, oriZ;
@@ -86,6 +92,7 @@ public class DrawGestureMultiplayer extends Activity {
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothGameService mGameService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +100,7 @@ public class DrawGestureMultiplayer extends Activity {
 
 
         bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
-        Intent recIntent= getIntent();
+         recIntent= getIntent();
         codeMap=setUpMap();
 
         // When DeviceListActivity returns with a device to connect
@@ -110,12 +117,11 @@ public class DrawGestureMultiplayer extends Activity {
 
         mGameService.connect(device);
 
-
-        gestureLibrary= GestureLibraries.fromRawResource(this, R.raw.gestures);
+    /*    gestureLibrary= GestureLibraries.fromRawResource(this, R.raw.gestures);
         overlay = (GestureOverlayView)findViewById(R.id.gestures_draw);
         //being done this way as I was unable to pass 'this' object to methods used for registering listeners
         overlay.addOnGesturingListener(new MyGesturingListener(this));
-        overlay.addOnGesturePerformedListener(new MyGesturePerformedListener(this,gestureLibrary, userName));
+        overlay.addOnGesturePerformedListener(new MyGesturePerformedListenerMulti(recIntent,this,this,gestureLibrary, userName));
 
         if(gestureLibrary==null)
         {
@@ -128,6 +134,7 @@ public class DrawGestureMultiplayer extends Activity {
                 finish();
             }
         }
+        */
         Button btnScore= (Button)findViewById(R.id.button_score);
 
         btnScore.setOnClickListener(new View.OnClickListener() {
@@ -148,12 +155,31 @@ public class DrawGestureMultiplayer extends Activity {
 
     }
     private void setupGame() {
-          mGameService=new BluetoothGameService(this, mHandler);
+
+        gestureLibrary= GestureLibraries.fromRawResource(this, R.raw.gestures);
+        overlay = (GestureOverlayView)findViewById(R.id.gestures_draw);
+        //being done this way as I was unable to pass 'this' object to methods used for registering listeners
+        overlay.addOnGesturingListener(new MyGesturingListener(this));
+        overlay.addOnGesturePerformedListener(new MyGesturePerformedListenerMulti(recIntent,this,this,gestureLibrary, userName));
+
+        if(gestureLibrary==null)
+        {
+            Log.e(TAG,"Gestures file not found");
+        }
+        else{
+
+            if(!gestureLibrary.load()){
+                Log.e(TAG,"Error loading gestures from file");
+                finish();
+            }
+        }
+
+        mGameService=new BluetoothGameService(this, mHandler);
         //Anything required to set-up the game.
 
     }
 
-    private void sendNewMessage(String message) {
+    public void sendNewMessage(String message) {
         // Check that we're actually connected before trying anything
         if (mGameService.getState() != BluetoothGameService.STATE_CONNECTED) {
             Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
@@ -210,7 +236,7 @@ public class DrawGestureMultiplayer extends Activity {
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
-
+Log.d("writeMessage",writeMessage);
                     int val1 = codeMap.get(writeMessage);
                     switch(val1){
                         case handStart:
@@ -315,4 +341,71 @@ public class DrawGestureMultiplayer extends Activity {
         codeMap.put("stop"    , 4 );
         return codeMap;
     }
+
+    public class MyGesturePerformedListenerMulti implements GestureOverlayView.OnGesturePerformedListener {
+
+        Intent recIntent;
+        GestureLibrary gestureLibrary=null;
+        Activity thisactivity;
+        Context context=null;
+        String userName=null;
+        MyGesturePerformedListenerMulti(Intent intent,Activity act,Context context, GestureLibrary gestureLibrary, String userName)
+        {
+            this.recIntent=intent;
+            this.thisactivity=act;
+            this.context=context;
+            this.gestureLibrary=gestureLibrary;
+            this.userName=userName;
+        }
+        @Override
+        public void onGesturePerformed(GestureOverlayView gestureOverlayView, Gesture gesture) {
+
+            //Now recognizing the gestures. Gestures with a prediction greater than 1.0 are best matches. Get the first such gesture.
+            //Else create a threshold and learn from user's input.
+            ArrayList<Prediction> predictions=gestureLibrary.recognize(gesture);
+            String predictionName=null;
+            String result="Unknown";
+
+            for(Prediction p:predictions)
+            {
+                if(p.score > 1.0)
+                {
+                    predictionName=p.name;
+                    break;
+                }
+            }
+            if(predictionName==null)
+            {
+                predictionName=context.getString(R.string.unreognized_gesture);
+            }
+            else{
+                String userInput="";
+                if(predictionName.equals("line"))
+                {
+                    userInput="Scissor";
+                }
+                else if(predictionName.equals("rectangle"))
+                {
+                    userInput="Paper";
+                }
+                else if(predictionName.equals("circle"))
+                {
+                    userInput="Rock";
+
+                }
+                else
+                    userInput="Unknown";
+                //Toast.makeText(context, "Your choice is "+userInput,Toast.LENGTH_SHORT).show();
+
+                result=userInput;
+
+                //Update data in DB
+                //clear the area for new gesture
+            }
+            sendNewMessage(result);
+        }
+
+
+    }
+
 }

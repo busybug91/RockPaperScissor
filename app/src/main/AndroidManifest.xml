@@ -47,6 +47,10 @@
             android:name=".DrawGestureMultiplayer"
             android:label="@string/title_activity_draw_gesture_multiplayer" >
         </activity>
+        <activity
+            android:name=".GestureListenerActivity"
+            android:label="@string/title_activity_gesture_listener" >
+        </activity>
     </application>
 
 </manifest>

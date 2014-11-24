@@ -175,6 +175,7 @@ public class MultiplayerWelcome extends Activity {
                     intent.putExtra("deviceaddr", address);
                     intent.putExtra(Intent.EXTRA_TEXT, userName);
                     intent.putExtra(Intent.EXTRA_UID,userID);
+
                     // Set result and finish this Activity
                     startActivity(intent);
                     //getActivity().setResult(Activity.RESULT_OK, intent);

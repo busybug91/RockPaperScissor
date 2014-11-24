@@ -20,6 +20,6 @@
     <string name="title_activity_multiplayer_welcome">MultiplayerWelcome</string>
     <string name="title_activity_draw_gesture_multiplayer">DrawGestureMultiplayer</string>
     <string name="not_connected">Not connected </string>
-
+    <string name="title_activity_gesture_listener">GestureListenerActivity</string>
 
 </resources>

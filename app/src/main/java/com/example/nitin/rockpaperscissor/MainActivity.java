@@ -177,7 +177,7 @@ public class MainActivity extends ActionBarActivity {
     private static void startMultiplayerMode(Context context, EditText editTextUserName, EditText editTextAge,
                                              RadioButton radioSexButton)
     {
-
+/*
         if(isEmpty(editTextUserName) || isEmpty(editTextAge)) {
             Toast.makeText(context, "Please fill in all the fields!", Toast.LENGTH_LONG).show();
         }else{
@@ -196,7 +196,9 @@ public class MainActivity extends ActionBarActivity {
 
                 Toast.makeText(context,userName+" is an existing user",Toast.LENGTH_SHORT).show();
             }
-
+       */
+        String userName= editTextUserName.getText().toString();
+        long rowId=1;
             Intent multiPlayerWelIntent = new Intent(context, MultiplayerWelcome.class);
             multiPlayerWelIntent.putExtra(Intent.EXTRA_TEXT, userName);
             multiPlayerWelIntent.putExtra(Intent.EXTRA_UID,rowId);
@@ -212,4 +214,3 @@ public class MainActivity extends ActionBarActivity {
 
 
       }
-    }
