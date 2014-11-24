@@ -23,9 +23,12 @@ public class MyCPU {
     private  ScoresModel sm = null;
     private   UserDAO userDao=null;
     private int rowId;
+    private boolean bBlueTooth=false;
+    private String deviceAddrr;
 
-    public MyCPU(Context ctx, String userName){
+    public MyCPU(Context ctx, String userName, String deviceAddrr){
         this.context=ctx;
+        this.deviceAddrr=deviceAddrr;
         this.userName=userName;
         userDao= new UserDAO(context);
         UserModel user=userDao.findUser(this.userName);
@@ -35,12 +38,14 @@ public class MyCPU {
 
     //----Multiple players
     public void blueGame(String user1,String user2){
+        bBlueTooth=true;
         String result="";
         result=blueGamer(user1,user2);
         result=result+" in round" + (++Round) +"/3 ." ;
         Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
 
         Intent intent=new Intent(context,AnimationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
 
         if(Round==3 || wins==2 || wins==-2) NextGame();
@@ -89,6 +94,7 @@ public class MyCPU {
 
     //------------Single Player
     public void cpuGame(String userInput,String gameMode){
+        bBlueTooth=false;
         String result="";
         result=cpuGamer(userInput,"Normal");
         result=result+" in round" + (++Round) +"/3 ." ;
@@ -180,40 +186,83 @@ public class MyCPU {
 
         /*You cannot just create a ScoresModel object and save data to it. You should remember who the user is through out
         * the application and make changes to his ScoresModel --by Nitin */
+        if (!bBlueTooth) { // Single player
 
-      final  Intent intent = new Intent(context, DrawGestureActivity.class);
-        intent.putExtra(Intent.EXTRA_TEXT,userName);
+            final  Intent intent = new Intent(context, DrawGestureActivity.class);
+            intent.putExtra(Intent.EXTRA_TEXT,userName);
 
-        long resultID=userDao.updateScore(sm,rowId);
-        if(resultID==-1){
-            Toast.makeText(context,"Unable to save your results",Toast.LENGTH_SHORT).show();
+            long resultID=userDao.updateScore(sm,rowId);
+            if(resultID==-1){
+                Toast.makeText(context,"Unable to save your results",Toast.LENGTH_SHORT).show();
+            }
+
+            new AlertDialog.Builder(context)
+                    .setTitle("You " + result)
+                    .setPositiveButton("Start New Game",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    // DrawGestureActivity.instance.onCreate(null); //refresh
+                                    DrawGestureActivity.instance.finish();
+
+                                    context.startActivity(intent);
+                                }
+                            })
+                    .setNegativeButton("Quit to Main Menu",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    //  startActivity();
+                                    DrawGestureActivity.instance.finish();
+                                    Intent intent = new Intent(context, MainActivity.class);
+                                    context.startActivity(intent);
+                                }
+                            })
+                    .create()
+                    .show();
         }
-        new AlertDialog.Builder(context)
-                .setTitle("You "+result)
-                .setPositiveButton("Start New Game",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                // DrawGestureActivity.instance.onCreate(null); //refresh
-                                DrawGestureActivity.instance.finish();
+        else{
 
-                                context.startActivity(intent);
-                            }
-                        })
-                .setNegativeButton("Quit to Main Menu",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                //  startActivity();
-                                DrawGestureActivity.instance.finish();
-                                Intent intent = new Intent(context, MainActivity.class);
-                                context.startActivity(intent);
-                            }
-                        })
-                .create()
-                .show();
+            final  Intent intent = new Intent(context, DrawGestureMultiplayer.class);
+            intent.putExtra(Intent.EXTRA_TEXT,userName);
+            intent.putExtra("deviceaddr",deviceAddrr);
+
+            long resultID=userDao.updateScore(sm,rowId);
+            if(resultID==-1){
+                Toast.makeText(context,"Unable to save your results",Toast.LENGTH_SHORT).show();
+            }
+
+            new AlertDialog.Builder(DrawGestureMultiplayer.instance)
+                    .setTitle("You " + result)
+                    .setPositiveButton("Start New Game",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    // DrawGestureActivity.instance.onCreate(null); //refresh
+                                    DrawGestureMultiplayer.instance.finish();
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    context.startActivity(intent);
+                                }
+                            })
+                    .setNegativeButton("Quit to Main Menu",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    //  startActivity();
+                                    DrawGestureMultiplayer.instance.finish();
+                                    Intent intent = new Intent(context, MultiplayerWelcome.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                    context.startActivity(intent);
+                                }
+                            })
+                    .create()
+                    .show();
+        }
     }
 
 

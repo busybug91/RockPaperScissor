@@ -18,8 +18,8 @@ import android.widget.Toast;
 
 public class AnimationActivity extends ActionBarActivity {
 
-    public static String user;
-    public static String cpu;
+    public static String user="";
+    public static String cpu="";
     public static int res;
     private MediaPlayer mp;
 

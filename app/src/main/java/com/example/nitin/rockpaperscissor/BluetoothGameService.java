@@ -291,9 +291,9 @@ public class BluetoothGameService {
      * It handles all incoming and outgoing transmissions.
      */
     private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
+        private  BluetoothSocket mmSocket;
+        private  InputStream mmInStream;
+        private  OutputStream mmOutStream;
         public ConnectedThread(BluetoothSocket socket) {
             Log.d(TAG, "create ConnectedThread");
             mmSocket = socket;
@@ -349,6 +349,20 @@ public class BluetoothGameService {
             } catch (IOException e) {
                 Log.e(TAG, "close() of connect socket failed", e);
             }
+        }
+        public void disconnect()
+        {
+            try {
+                mmInStream = null;
+                mmOutStream = null;
+                mmSocket.close();
+            }
+            catch(Exception e)
+            {
+                Log.e("Exception: ",e.toString());
+
+            }
+
         }
     }
     

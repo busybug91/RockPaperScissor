@@ -61,7 +61,7 @@ public class MyGesturePerformedListener implements GestureOverlayView.OnGestureP
             else
                 userInput="Unknown";
             //Toast.makeText(context, "Your choice is "+userInput,Toast.LENGTH_SHORT).show();
-            MyCPU cpu=new MyCPU(context,userName);
+            MyCPU cpu=new MyCPU(context,userName,"");
             cpu.cpuGame(userInput,"Normal");
 
             //Update data in DB

@@ -24,7 +24,8 @@ import com.example.nitin.rockpaperscissor.com.example.nitin.rockpaperscissor.db.
 public class MainActivity extends ActionBarActivity {
 
     private static final int REQUEST_ENABLE_BT = 2;
-    static private BluetoothAdapter bluetoothAdapter=null;
+    static private BluetoothAdapter bluetoothAdapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,73 +70,70 @@ public class MainActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            final EditText editTextUserName=(EditText)rootView.findViewById(R.id.editText2);
-            final EditText editTextAge = (EditText)rootView.findViewById(R.id.editText);
+            final EditText editTextUserName = (EditText) rootView.findViewById(R.id.editText2);
+            final EditText editTextAge = (EditText) rootView.findViewById(R.id.editText);
 
             final RadioGroup radioSexGroup = (RadioGroup) rootView.findViewById(R.id.radioGender);
             final RadioButton radioSexButton = (RadioButton) rootView.findViewById(radioSexGroup.getCheckedRadioButtonId());
 
-            Button playButton=(Button)rootView.findViewById(R.id.button_play);
-            Button instructionsButton=(Button)rootView.findViewById(R.id.button_instructions);
+            Button playButton = (Button) rootView.findViewById(R.id.button_play);
+            Button instructionsButton = (Button) rootView.findViewById(R.id.button_instructions);
             instructionsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent= new Intent(getActivity(),Intructions.class);
+                    Intent intent = new Intent(getActivity(), Intructions.class);
                     startActivity(intent);
                 }
             });
-            Button playWithBluetooth= (Button) rootView.findViewById(R.id.button_play_bt);
+            Button playWithBluetooth = (Button) rootView.findViewById(R.id.button_play_bt);
             playWithBluetooth.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
-                    if(null == bluetoothAdapter)
-                    {
+                    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    if (null == bluetoothAdapter) {
                         Toast.makeText(getActivity(), getString(R.string.bt_unavailable_msg), Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        if(!bluetoothAdapter.isEnabled()) {
+                    } else {
+                        if (!bluetoothAdapter.isEnabled()) {
                             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                             getActivity().startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-                        }
-                        else{
+                        } else {
 
                             Toast.makeText(getActivity(), getString(R.string.bt_enabled), Toast.LENGTH_LONG).show();
                             startMultiplayerMode(getActivity(), editTextUserName, editTextAge, radioSexButton);
                         }
-                      }
+                    }
                 }
             });
 
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(isEmpty(editTextUserName) || isEmpty(editTextAge)) {
+                    if (isEmpty(editTextUserName) || isEmpty(editTextAge)) {
                         Toast.makeText(getActivity(), "Please fill in all the fields!", Toast.LENGTH_LONG).show();
-                    }else{
-                        int   age = Integer.parseInt(editTextAge.getText().toString());
-                        String userName= editTextUserName.getText().toString();
+                    } else {
+                        int age = Integer.parseInt(editTextAge.getText().toString());
+                        String userName = editTextUserName.getText().toString();
                         String sex = radioSexButton.getText().toString();
                         final UserModel model = new UserModel(sex, age, userName);
                         UserDAO dao = new UserDAO(getActivity());
-                        long rowId2=-1;
-                        long rowId=  dao.saveUser(model);
-                        if(rowId!=-1) {
-                             rowId2 = dao.saveScore(model.getScore());
-                            Toast.makeText(getActivity(),userName+" registered",Toast.LENGTH_SHORT).show();
+                        long rowId2 = -1;
+                        long rowId = dao.saveUser(model);
+                        if (rowId != -1) {
+                            rowId2 = dao.saveScore(model.getScore());
+                            Toast.makeText(getActivity(), userName + " registered", Toast.LENGTH_SHORT).show();
 
-                        }else{
+                        } else {
 
-                            Toast.makeText(getActivity(),userName+" is an existing user",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), userName + " is an existing user", Toast.LENGTH_SHORT).show();
                         }
 
                         Intent drawGestureIntent = new Intent(getActivity(), DrawGestureActivity.class);
                         drawGestureIntent.putExtra(Intent.EXTRA_TEXT, userName);
-                        drawGestureIntent.putExtra(Intent.EXTRA_UID,rowId);
+                        drawGestureIntent.putExtra(Intent.EXTRA_UID, rowId);
                         startActivity(drawGestureIntent);
 
-             //           getActivity().finish();
+                        //           getActivity().finish();
                     }
                 }
             });
@@ -143,13 +141,15 @@ public class MainActivity extends ActionBarActivity {
         }
 
     }
+
     private static boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
     }
+
     @Override
-    protected void onActivityResult (int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Toast.makeText(this, getString(R.string.bt_enabled), Toast.LENGTH_LONG).show();
-        switch(requestCode) {
+        switch (requestCode) {
             /*
             case REQUEST_CONNECT_DEVICE:
                 if (resultCode == Activity.RESULT_OK) {
@@ -173,35 +173,33 @@ public class MainActivity extends ActionBarActivity {
                 break;
             default:
         }
-     }
+    }
+
     private static void startMultiplayerMode(Context context, EditText editTextUserName, EditText editTextAge,
-                                             RadioButton radioSexButton)
-    {
-/*
-        if(isEmpty(editTextUserName) || isEmpty(editTextAge)) {
+                                             RadioButton radioSexButton) {
+
+        if (isEmpty(editTextUserName) || isEmpty(editTextAge)) {
             Toast.makeText(context, "Please fill in all the fields!", Toast.LENGTH_LONG).show();
-        }else{
-            int   age = Integer.parseInt(editTextAge.getText().toString());
-            String userName= editTextUserName.getText().toString();
+        } else {
+            int age = Integer.parseInt(editTextAge.getText().toString());
+            String userName = editTextUserName.getText().toString();
             String sex = radioSexButton.getText().toString();
             final UserModel model = new UserModel(sex, age, userName);
             UserDAO dao = new UserDAO(context);
-            long rowId2=-1;
-            long rowId=  dao.saveUser(model);
-            if(rowId!=-1) {
+            long rowId2 = -1;
+            long rowId = dao.saveUser(model);
+            if (rowId != -1) {
                 rowId2 = dao.saveScore(model.getScore());
-                Toast.makeText(context,userName+" registered",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, userName + " registered", Toast.LENGTH_SHORT).show();
 
-            }else{
+            } else {
 
-                Toast.makeText(context,userName+" is an existing user",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, userName + " is an existing user", Toast.LENGTH_SHORT).show();
             }
-       */
-        String userName= editTextUserName.getText().toString();
-        long rowId=1;
+
             Intent multiPlayerWelIntent = new Intent(context, MultiplayerWelcome.class);
             multiPlayerWelIntent.putExtra(Intent.EXTRA_TEXT, userName);
-            multiPlayerWelIntent.putExtra(Intent.EXTRA_UID,rowId);
+            multiPlayerWelIntent.putExtra(Intent.EXTRA_UID, rowId);
             context.startActivity(multiPlayerWelIntent);
 
             /*
@@ -211,6 +209,5 @@ public class MainActivity extends ActionBarActivity {
             context.startActivity(playWithBluetoothIntent);
             */
         }
-
-
-      }
+    }
+}

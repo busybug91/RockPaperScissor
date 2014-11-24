@@ -34,12 +34,13 @@ import java.util.Random;
 
 public class DrawGestureMultiplayer extends Activity {
 
-    public  DrawGestureActivity instance=null;
+    public static DrawGestureMultiplayer instance=null;
     private  GestureLibrary gestureLibrary;
     private  GestureOverlayView overlay;
     private String userName;
     private long userId;
     public static String input;
+    private String deviceAddrr;
     Intent recIntent;
 
     SensorManager sensorManager = null;
@@ -85,7 +86,7 @@ public class DrawGestureMultiplayer extends Activity {
     private ImageButton paper;
     private ImageButton scissors;
 
-    public Map<String,Integer> codeMap;
+    public Map<String,Integer> codeMap= new HashMap<String, Integer>();
 
     private timerThread thread;
     private String TAG=getClass().getSimpleName().toString();
@@ -97,11 +98,17 @@ public class DrawGestureMultiplayer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw_gesture_multiplayer2);
-
+        instance=this;
 
         bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
          recIntent= getIntent();
-        codeMap=setUpMap();
+
+        //initialize codemap
+        codeMap.put("start", 0 );
+        codeMap.put("Rock" , 1 );
+        codeMap.put("Paper" , 2 );
+        codeMap.put("Scissor", 3 );
+        codeMap.put("stop", 4 );
 
         // When DeviceListActivity returns with a device to connect
         userName=recIntent.getStringExtra(Intent.EXTRA_TEXT);
@@ -111,8 +118,10 @@ public class DrawGestureMultiplayer extends Activity {
 
         String address = recIntent.getExtras().getString("deviceaddr");
         // Get the BLuetoothDevice object
+        deviceAddrr=address;
         Log.d(TAG,"Device address is: "+address);
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+
         if (mGameService == null) setupGame();
 
         mGameService.connect(device);
@@ -236,7 +245,7 @@ public class DrawGestureMultiplayer extends Activity {
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
-Log.d("writeMessage",writeMessage);
+                    Log.d("writeMessage",writeMessage);
                     int val1 = codeMap.get(writeMessage);
                     switch(val1){
                         case handStart:
@@ -257,7 +266,9 @@ Log.d("writeMessage",writeMessage);
 
                             if(codeRecvFlag == true){
                         //        findWinner();
-                                MyCPU mycpu=new MyCPU(getApplicationContext(),userName);
+                                codeSentFlag=false;
+                                codeRecvFlag=false;
+                                MyCPU mycpu=new MyCPU(getApplicationContext(),userName,deviceAddrr);
                                 mycpu.blueGame(sentCode,recvCode);
                             }
                             break;
@@ -267,7 +278,7 @@ Log.d("writeMessage",writeMessage);
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-
+                    Log.d("Readmessage",readMessage);
                     int val2 = codeMap.get(readMessage);
                     switch(val2){
                         case handStart:
@@ -290,7 +301,9 @@ Log.d("writeMessage",writeMessage);
 
                             if(codeSentFlag == true){
                       //          findWinner();
-                                MyCPU mycpu=new MyCPU(getApplicationContext(),userName);
+                                codeSentFlag=false;
+                                codeRecvFlag=false;
+                                MyCPU mycpu=new MyCPU(getApplicationContext(),userName, deviceAddrr);
                                 mycpu.blueGame(sentCode,recvCode);
                             }
                             break;
@@ -300,7 +313,7 @@ Log.d("writeMessage",writeMessage);
                     // save the connected device's name
                     mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
                     Toast.makeText(getApplicationContext(), "Connected to "
-                            + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                            + mConnectedDeviceName +". Start!", Toast.LENGTH_SHORT).show();
                     break;
                 case MESSAGE_TOAST:
                     Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
@@ -337,7 +350,7 @@ Log.d("writeMessage",writeMessage);
         codeMap.put("start"   , 0 );
         codeMap.put("Rock"    , 1 );
         codeMap.put("Raper"   , 2 );
-        codeMap.put("Scissors", 3 );
+        codeMap.put("Scissor", 3 );
         codeMap.put("stop"    , 4 );
         return codeMap;
     }
@@ -402,6 +415,7 @@ Log.d("writeMessage",writeMessage);
                 //Update data in DB
                 //clear the area for new gesture
             }
+            Log.d("Gesture",result);
             sendNewMessage(result);
         }
 
