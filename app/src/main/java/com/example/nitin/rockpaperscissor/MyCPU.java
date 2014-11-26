@@ -253,10 +253,10 @@ public class MyCPU {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
                                     //  startActivity();
+                                    DrawGestureMultiplayer.instance.sendNewMessage("stop"); //"send stop message"
                                     DrawGestureMultiplayer.instance.finish();
                                     Intent intent = new Intent(context, MultiplayerWelcome.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
                                     context.startActivity(intent);
                                 }
                             })

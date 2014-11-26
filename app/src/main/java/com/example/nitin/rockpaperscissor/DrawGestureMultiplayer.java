@@ -109,6 +109,7 @@ public class DrawGestureMultiplayer extends Activity {
         codeMap.put("Paper" , 2 );
         codeMap.put("Scissor", 3 );
         codeMap.put("stop", 4 );
+        codeMap.put("Unknown",5);
 
         // When DeviceListActivity returns with a device to connect
         userName=recIntent.getStringExtra(Intent.EXTRA_TEXT);
@@ -293,6 +294,12 @@ public class DrawGestureMultiplayer extends Activity {
                         case handStop:
                             // End of game message
                             sentStop = true;
+                            Toast.makeText(getApplicationContext(), "Disconnected with other player."
+                                    ,Toast.LENGTH_SHORT).show();
+                            Intent intent=new Intent(getApplicationContext(),MultiplayerWelcome.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            getApplicationContext().startActivity(intent);
+
                           //  playDisallow();
                             break;
                         default:
